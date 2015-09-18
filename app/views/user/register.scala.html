@@ -1,0 +1,14 @@
+@import helper._
+@import models.{User => ModelUser}
+
+@(userForm: Form[ModelUser])
+@main("Register Page") {
+    <h2>Register</h2>
+    @form(routes.User.addUser) {
+        <input type="text" value="" name="username" placeholder="username"/>
+        <input type="password" value="" name="password" placeholder="password"/>
+        <input type="email" value="" name="email" placeholder="email">
+        <input type="hidden" value="@userForm.data.get("id").getOrElse(0)" name="id" />
+        <input type="submit" name="login" value="Register" />
+    }
+}

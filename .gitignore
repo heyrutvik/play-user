@@ -1,0 +1,36 @@
+.classpath
+.project
+.settings
+RUNNING_PID
+bin/
+
+# Idea project files
+.idea
+.idea_modules
+*.iml
+*.ipr
+*.iws
+
+# Emacs
+*~
+*#
+.#*
+.ensime
+.ensime_lucene
+.ensime_cache
+TAGS
+tags
+
+# mvn
+target
+logs
+
+# Eclipse project files
+.classpath
+.externalToolBuilders/
+.project
+.scala_dependencies
+
+# sbt
+.lib
+project/target

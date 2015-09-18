@@ -1,0 +1,39 @@
+@import models.{User => ModelUser}
+@import models.{Todo => ModelTodo}
+@import helper._
+@(user: ModelUser, todos: List[ModelTodo], form: Form[ModelTodo])
+@main("Todo List") {
+    <p class="right">Welcome @user.username,</p>
+    <br />
+    <div style="clear: both"></div>
+    <div class="right">
+    @helper.form(routes.User.logoutUser){
+        <input type="submit" value="Logout" name="logout"/>
+    }
+    </div>
+    <div style="clear: both"></div>
+    <h3 class="count">your list has @todos.length task(s).</h3>
+    @if(todos.length > 0) {
+    <div>
+        @for(todo <- todos) {
+        <div>
+        <h4 class="title">@todo.title</h4>
+        <p class="desc"">@todo.desc</p>
+        @helper.form(routes.Todo.delete(todo.id)) {
+            <input type="submit" name="delete" value="Delete" />
+        }
+        </div>
+    }
+    </div>
+    }
+    <p></p>
+    @helper.form(routes.Todo.add) {
+        <table>
+            <tr><td>Title:</td><td><input type="text" name="title" value=""/></td></tr>
+            <tr><td>Description:</td><td><textarea name="desc"></textarea></td></tr>
+            <tr><td></td><td><input type="submit" name="add" value="Add"></td></tr>
+        </table>
+        <input type="hidden" name="id" value="0" />
+        <input type="hidden" name="user_id" value="@user.id"/>
+    }
+}

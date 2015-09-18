@@ -1,0 +1,12 @@
+@()
+@import helper._
+@main("Login Page") {
+    <h2>Login</h2>
+    @form(routes.User.loginUser) {
+        <input type="text" value="" name="username" placeholder="username"/>
+        <input type="password" value="" name="password" placeholder="password"/>
+        <input type="submit" name="login" value="Login" />
+    }
+    <h2>don't have an account?</h2>
+    <a href="@routes.User.registerPage">Register</a>
+}
