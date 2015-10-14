@@ -5,6 +5,8 @@ import play.api.mvc._
 import play.api.cache._
 import javax.inject.Inject
 
+import services.UserService
+
 import models.{User => ModelUser}
 
 import play.api.data._
@@ -36,15 +38,12 @@ class User @Inject() (cache: CacheApi) extends Controller {
     loginForm.bindFromRequest.fold(
       errors => BadRequest(views.html.user.login()),
       data => {
-        // fetch use id if data: (String, String) is valid
+        // fetch user id if data: (String, String) is valid
         val user_id = ModelUser.authenticate(data)
         // redirect
         if (user_id > 0) {
           val user_id_string = user_id.toString
-          val user: ModelUser = cache.getOrElse[ModelUser](user_id_string) {
-            println("BeforeLogin")
-            ModelUser.findById(user_id)
-          }
+          UserService(cache, user_id_string).getUser()
           Redirect(routes.Todo.list).withSession("session_user" -> user_id_string)
         } else
           Redirect(routes.User.loginPage)

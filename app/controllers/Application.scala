@@ -5,8 +5,8 @@ import play.api.mvc._
 
 class Application extends Controller {
 
+  // TODO 
   def index = Action {
-    //Ok(views.html.index("Your new application is ready."))
     Ok(views.html.user.login())
   }
 

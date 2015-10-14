@@ -9,11 +9,10 @@ import play.api.Play.current
 //import play.api.libs._
 
 case class User(
-  id: Int = 0,
-  username: String = "",
-  password: String = "",
-  email: String = ""
-) {
+    id: Int = 0,
+    username: String = "",
+    password: String = "",
+    email: String = "") {
 
   // imported to use companion object's method
   import User._
@@ -21,13 +20,11 @@ case class User(
   def create: Int = {
     DB.withConnection { implicit c =>
       SQL(
-        "INSERT INTO user (`username`, `password`, `email`) VALUES ({username}, {password}, {email})"
-      ).on(
+        "INSERT INTO user (`username`, `password`, `email`) VALUES ({username}, {password}, {email})").on(
           "username" -> username,
           //"password" -> Crypto.encryptAES(password),
           "password" -> MD5(password),
-          "email" -> email
-        ).executeInsert(scalar[Int].singleOpt).getOrElse(0)
+          "email" -> email).executeInsert(scalar[Int].singleOpt).getOrElse(0)
       //).executeUpdate()
     }
   }
@@ -64,17 +61,12 @@ object User {
 
   def authenticate(data: (String, String)): Int = {
     msg("user model authenticate", data)
-    var id: Int = 0
     DB.withConnection { implicit c =>
-      id = SQL(
-        "SELECT * FROM user WHERE `username` = {username} AND `password` = {password} LIMIT 1"
-      ).on(
+      SQL(
+        "SELECT * FROM user WHERE `username` = {username} AND `password` = {password} LIMIT 1").on(
           "username" -> data._1,
-          "password" -> MD5(data._2)
-        ).as(SqlParser.int("id").singleOpt).getOrElse(0)
-      //).executeUpdate()
+          "password" -> MD5(data._2)).as(SqlParser.int("id").singleOpt).getOrElse(0)
     }
-    id
   }
 
   def save(user: User): Int = {

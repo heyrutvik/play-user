@@ -7,6 +7,8 @@ import models.{Todo => ModelTodo}
 import play.api.cache._
 import javax.inject.Inject
 
+import services.UserService
+
 import play.api.data._
 import play.api.data.Forms._
 
@@ -23,10 +25,7 @@ class Todo @Inject() (cache: CacheApi) extends Controller {
 
   def list = Action { implicit request =>
     request.session.get("session_user").map { user_id_string =>
-      val user: ModelUser = cache.getOrElse[ModelUser](user_id_string) {
-        println("AfterLogin")
-        ModelUser.findById(user_id_string.toInt)
-      }
+      val user: ModelUser = UserService(cache, user_id_string).getUser()
       val todos = ModelTodo.listOfUser(user.id)
       // this is temporary, form will always blank with only logged in user id
       todoForm.fill(ModelTodo(user.id))
@@ -38,10 +37,7 @@ class Todo @Inject() (cache: CacheApi) extends Controller {
 
   def add = Action { implicit request =>
     request.session.get("session_user").map { user_id_string =>
-      val user: ModelUser = cache.getOrElse[ModelUser](user_id_string) {
-        println("AfterLogin")
-        ModelUser.findById(user_id_string.toInt)
-      }
+      val user: ModelUser = UserService(cache, user_id_string).getUser()
       val todos = ModelTodo.listOfUser(user.id)
       todoForm.bindFromRequest.fold(
         errors => BadRequest(views.html.todo.list(user, todos, errors)),
